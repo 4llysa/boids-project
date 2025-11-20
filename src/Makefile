@@ -105,7 +105,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ant_war_OBJECTS = main.$(OBJEXT)
+am_ant_war_OBJECTS = main.$(OBJEXT) flock.$(OBJEXT) renderer.$(OBJEXT)
 ant_war_OBJECTS = $(am_ant_war_OBJECTS)
 ant_war_LDADD = $(LDADD)
 AM_V_lt = $(am__v_lt_$(V))
@@ -130,7 +130,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/main.Po
+am__depfiles_remade = ./$(DEPDIR)/flock.Po ./$(DEPDIR)/main.Po \
+	./$(DEPDIR)/renderer.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -248,7 +249,7 @@ PACKAGE_VERSION = 0.1.0
 PATH_SEPARATOR = :
 PKG_CONFIG = /opt/homebrew/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
-PKG_CONFIG_PATH = /opt/homebrew/lib/pkgconfig/
+PKG_CONFIG_PATH = 
 RANLIB = ranlib
 SED = /opt/homebrew/bin/gsed
 SET_MAKE = 
@@ -318,7 +319,9 @@ AM_CXXFLAGS = \
 	-I/opt/homebrew/Cellar/sdl2_gfx/1.0.4/include/SDL2 -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE 
 
 ant_war_SOURCES = \
-	main.cxx
+	main.cxx \
+	model/flock.cpp \
+	utility/renderer.cxx 
 
 ant_war_LDFLAGS = \
 	-L/opt/homebrew/Cellar/sdl2_gfx/1.0.4/lib -lSDL2_gfx -L/opt/homebrew/lib -lSDL2
@@ -326,7 +329,7 @@ ant_war_LDFLAGS = \
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .cxx .lo .o .obj
+.SUFFIXES: .cpp .cxx .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -411,13 +414,64 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/flock.Po # am--include-marker
 include ./$(DEPDIR)/main.Po # am--include-marker
+include ./$(DEPDIR)/renderer.Po # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
 	@: >>$@
 
 am--depfiles: $(am__depfiles_remade)
+
+.cpp.o:
+	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cpp.lo:
+	$(AM_V_CXX)$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+#	$(AM_V_CXX)source='$<' object='$@' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LTCXXCOMPILE) -c -o $@ $<
+
+flock.o: model/flock.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT flock.o -MD -MP -MF $(DEPDIR)/flock.Tpo -c -o flock.o `test -f 'model/flock.cpp' || echo '$(srcdir)/'`model/flock.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/flock.Tpo $(DEPDIR)/flock.Po
+#	$(AM_V_CXX)source='model/flock.cpp' object='flock.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o flock.o `test -f 'model/flock.cpp' || echo '$(srcdir)/'`model/flock.cpp
+
+flock.obj: model/flock.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT flock.obj -MD -MP -MF $(DEPDIR)/flock.Tpo -c -o flock.obj `if test -f 'model/flock.cpp'; then $(CYGPATH_W) 'model/flock.cpp'; else $(CYGPATH_W) '$(srcdir)/model/flock.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/flock.Tpo $(DEPDIR)/flock.Po
+#	$(AM_V_CXX)source='model/flock.cpp' object='flock.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o flock.obj `if test -f 'model/flock.cpp'; then $(CYGPATH_W) 'model/flock.cpp'; else $(CYGPATH_W) '$(srcdir)/model/flock.cpp'; fi`
+
+renderer.o: utility/renderer.cxx
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT renderer.o -MD -MP -MF $(DEPDIR)/renderer.Tpo -c -o renderer.o `test -f 'utility/renderer.cxx' || echo '$(srcdir)/'`utility/renderer.cxx
+	$(AM_V_at)$(am__mv) $(DEPDIR)/renderer.Tpo $(DEPDIR)/renderer.Po
+#	$(AM_V_CXX)source='utility/renderer.cxx' object='renderer.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o renderer.o `test -f 'utility/renderer.cxx' || echo '$(srcdir)/'`utility/renderer.cxx
+
+renderer.obj: utility/renderer.cxx
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT renderer.obj -MD -MP -MF $(DEPDIR)/renderer.Tpo -c -o renderer.obj `if test -f 'utility/renderer.cxx'; then $(CYGPATH_W) 'utility/renderer.cxx'; else $(CYGPATH_W) '$(srcdir)/utility/renderer.cxx'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/renderer.Tpo $(DEPDIR)/renderer.Po
+#	$(AM_V_CXX)source='utility/renderer.cxx' object='renderer.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o renderer.obj `if test -f 'utility/renderer.cxx'; then $(CYGPATH_W) 'utility/renderer.cxx'; else $(CYGPATH_W) '$(srcdir)/utility/renderer.cxx'; fi`
 
 .cxx.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -573,7 +627,9 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
+	-rm -f ./$(DEPDIR)/flock.Po
 	-rm -f ./$(DEPDIR)/main.Po
+	-rm -f ./$(DEPDIR)/renderer.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -619,7 +675,9 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+	-rm -f ./$(DEPDIR)/flock.Po
 	-rm -f ./$(DEPDIR)/main.Po
+	-rm -f ./$(DEPDIR)/renderer.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

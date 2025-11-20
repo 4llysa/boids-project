@@ -7,7 +7,9 @@ AM_CXXFLAGS= \
 	@LDEPS_CFLAGS@ 
 
 ant_war_SOURCES = \
-	main.cxx
+	main.cxx \
+	model/flock.cpp \
+	utility/renderer.cxx 
 
 ant_war_LDFLAGS = \
 	@LDEPS_LIBS@

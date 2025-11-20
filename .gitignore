@@ -1,0 +1,9 @@
+*
+!/.gitignore
+!/configure.ac
+!/Makefile.am
+!/src/
+!/m4/ 
+!/src/**
+/m4/*
+*.o
